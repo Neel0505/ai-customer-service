@@ -1,95 +1,104 @@
-# 🤖 AI Omnichannel Customer Service & Sales Agent
+Set-Content -Path README.md -Value @'
+# AI Customer Service Agent
 
-AI-powered customer service and sales agent integrated with **Shopify**, supporting **WhatsApp**, **Email**, and **Instagram** channels.
+A production-ready AI agent that handles customer support and sales autonomously across multiple messaging platforms, built on top of Shopify's ecosystem.
 
-## Features
+> Built by **Neel Parikh**
 
-- **Autonomous AI Agent** — GPT-4o powered, with tool calling for Shopify operations
-- **3 Channels** — WhatsApp (interactive buttons/lists), Email (branded HTML), Instagram DMs
-- **Shopify Integration** — Orders, products, returns, inventory, customers, draft orders
-- **RAG Knowledge Base** — pgvector semantic search over product catalog
-- **BANT Lead Scoring** — Automatic lead qualification and escalation
-- **Smart Escalation** — 7 trigger types (sentiment, score, retries, legal, VIP, etc.)
-- **Admin Dashboard** — Real-time WebSocket updates, full debug conversation viewer
-- **Simulator** — Browser-based chat UI for testing without real APIs
+## What it does
 
-## Quick Start (Local Development)
+This project connects an LLM-powered agent to your Shopify store and lets it handle real customer conversations — order lookups, product questions, returns, and lead qualification — across WhatsApp, Email, and Instagram, without human intervention unless escalation is needed.
+
+## Core Features
+
+- **GPT-4o Agent** with tool-calling to perform live Shopify operations
+- **Multi-channel support** — WhatsApp (buttons/lists), Email (HTML), Instagram DMs
+- **RAG pipeline** — pgvector semantic search over your product catalog so the agent always has accurate product context
+- **BANT lead scoring** — automatically qualifies inbound leads and routes hot ones
+- **Escalation engine** — 7 trigger types including sentiment analysis, VIP detection, legal flags, and retry limits
+- **Admin dashboard** — live WebSocket feed with full conversation debug view
+- **Chat simulator** — test the agent in your browser without needing real API credentials
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | FastAPI (Python) |
+| LLM | OpenAI GPT-4o |
+| Database | PostgreSQL + pgvector |
+| Cache / Queue | Redis |
+| Channels | Twilio (WhatsApp), SendGrid (Email), Meta API (Instagram) |
+| E-commerce | Shopify Admin API |
+| Deployment | Railway + Docker |
+
+## Getting Started
 
 ### Prerequisites
 
 ```bash
-# Install Postgres + pgvector + Redis via Homebrew
+# PostgreSQL with pgvector + Redis
 brew install postgresql@16 pgvector redis
-
-# Start services
 brew services start postgresql@16
 brew services start redis
 
-# Create database and enable pgvector
 createdb omnichannel_agent
 psql omnichannel_agent -c "CREATE EXTENSION vector;"
 ```
 
-### Setup
+### Install & Run
 
 ```bash
-# Create virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies
 pip install -e ".[dev]"
 
-# Run the setup wizard (creates .env, runs migrations, ingests products)
+# Interactive setup — configures .env, runs migrations, ingests Shopify products
 python scripts/setup_wizard.py
 
-# Start the dev server (spins up uvicorn AND ngrok tunnel automatically)
+# Starts uvicorn + ngrok tunnel
 python3 scripts/dev.py
 ```
 
-### Access
+### Local URLs
 
-| URL | Description |
-|-----|-------------|
+| Endpoint | Description |
+|---|---|
 | `http://localhost:8000/health` | Health check |
-| `http://localhost:8000/admin/` | Admin dashboard (basic auth) |
-| `http://localhost:8000/simulator` | Chat simulator (basic auth) |
-| `http://localhost:8000/docs` | API docs (Swagger) |
+| `http://localhost:8000/admin/` | Admin dashboard |
+| `http://localhost:8000/simulator` | Chat simulator |
+| `http://localhost:8000/docs` | Swagger API docs |
 
-## Deploy to Railway
+## Deploying to Railway
 
-1. Push your repo to GitHub
-2. Create a new project on [Railway](https://railway.app)
-3. Add **PostgreSQL** and **Redis** services
-4. Connect your GitHub repo
-5. Set all env vars from `.env` in Railway dashboard
-6. **Custom Domain**: Settings → Networking → Custom Domain → add `api.clientname.com` → update DNS CNAME
+1. Push this repo to GitHub
+2. Create a new Railway project
+3. Add **PostgreSQL** and **Redis** plugins
+4. Link your GitHub repo
+5. Set all variables from `.env.example` in the Railway dashboard
+6. Point a custom domain (e.g. `api.yourdomain.com`) via Settings → Networking
 
-### Webhook Registration
+### Webhook URLs to register
 
-After deployment, register these URLs with the respective platforms:
+| Platform | Webhook URL |
+|---|---|
+| WhatsApp (Twilio) | `https://api.yourdomain.com/webhooks/twilio/whatsapp` |
+| Email (SendGrid) | `https://api.yourdomain.com/webhooks/email` |
+| Instagram (Meta) | `https://api.yourdomain.com/webhooks/instagram` |
+| Shopify | `https://api.yourdomain.com/webhooks/shopify` |
 
-| Platform | URL |
-|----------|-----|
-| WhatsApp (Twilio) | `https://api.clientname.com/webhooks/twilio/whatsapp` |
-| Email (SendGrid) | `https://api.clientname.com/webhooks/email` |
-| Instagram (Meta) | `https://api.clientname.com/webhooks/instagram` |
-| Shopify | `https://api.clientname.com/webhooks/shopify` |
-
-## Architecture
-
-```
+## Architecture Overview
 FastAPI Monolith
-├── Webhooks (Twilio WhatsApp, Email, Instagram, Shopify)
-├── Orchestrator (12-step pipeline)
-├── LLM Service (OpenAI GPT-4o + tools)
-├── RAG Service (pgvector semantic search)
-├── Channel Adapters (Twilio WhatsApp, Email, Instagram, Simulator)
-├── Sales Engine (BANT lead scoring)
-├── Escalation Service (7 triggers + email alerts)
-└── Admin Dashboard (WebSocket live updates)
-```
+├── Webhook receivers      (Twilio, SendGrid, Meta, Shopify)
+├── Orchestrator           (12-step processing pipeline)
+├── LLM Service            (GPT-4o + Shopify tool definitions)
+├── RAG Service            (pgvector similarity search)
+├── Channel Adapters       (per-platform message formatting)
+├── Sales Engine           (BANT scoring logic)
+├── Escalation Service     (trigger detection + email alerts)
+└── Admin Dashboard        (WebSocket live updates)
 
 ## License
 
-Private — All rights reserved.
+MIT — feel free to use, modify, and build on this.
+'@
