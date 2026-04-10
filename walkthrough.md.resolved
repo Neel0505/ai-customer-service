@@ -1,0 +1,46 @@
+# AI Omnichannel Agent MVP — Walkthrough
+
+## What Was Built
+
+A complete **Python/FastAPI monolith** with **40+ files** implementing an AI-powered customer service & sales agent.
+
+### Core Architecture
+
+```mermaid
+graph LR
+  WA[WhatsApp] --> WH[Webhooks]
+  EM[Email] --> WH
+  IG[Instagram] --> WH
+  WH --> OR[Orchestrator]
+  OR --> IC[Intent Classifier]
+  OR --> RAG[RAG Search]
+  OR --> LLM[GPT-4o + Tools]
+  OR --> SE[Sales Engine]
+  OR --> ES[Escalation]
+  LLM --> SH[Shopify API]
+  RAG --> PG[(pgvector)]
+  OR --> RD[(Redis Sessions)]
+```
+
+### Files Created (40+)
+
+| Component | Files | Key Features |
+|-----------|-------|--------------|
+| **Config** | [config.py](file:///Users/jaineel/projects/sales-customer-service/app/config.py), [.env.example](file:///Users/jaineel/projects/sales-customer-service/.env.example) | All env vars via Pydantic Settings |
+| **DB Models** (6) | [contact](file:///Users/jaineel/projects/sales-customer-service/app/models/contact.py), [conversation](file:///Users/jaineel/projects/sales-customer-service/app/models/conversation.py), [message](file:///Users/jaineel/projects/sales-customer-service/app/models/message.py), [lead](file:///Users/jaineel/projects/sales-customer-service/app/models/lead.py), [escalation](file:///Users/jaineel/projects/sales-customer-service/app/models/escalation.py), [product_embedding](file:///Users/jaineel/projects/sales-customer-service/app/models/product_embedding.py) | UUID PKs, pgvector 1536-dim |
+| **Shopify** | [shopify_service](file:///Users/jaineel/projects/sales-customer-service/app/services/shopify_service.py), [shopify_ingestion](file:///Users/jaineel/projects/sales-customer-service/app/services/shopify_ingestion.py), [shopify_tools](file:///Users/jaineel/projects/sales-customer-service/app/tools/shopify_tools.py) | 14+ API methods, 10 LLM tools |
+| **LLM Engine** | [llm_service](file:///Users/jaineel/projects/sales-customer-service/app/services/llm_service.py), [intent_classifier](file:///Users/jaineel/projects/sales-customer-service/app/services/intent_classifier.py) | 2-call tool approach, token counting |
+| **Brain** | [orchestrator](file:///Users/jaineel/projects/sales-customer-service/app/services/orchestrator.py) | 12-step pipeline |
+| **Channels** | [whatsapp](file:///Users/jaineel/projects/sales-customer-service/app/channels/whatsapp.py), [email](file:///Users/jaineel/projects/sales-customer-service/app/channels/email_channel.py), [instagram](file:///Users/jaineel/projects/sales-customer-service/app/channels/instagram.py), [simulator](file:///Users/jaineel/projects/sales-customer-service/app/channels/simulator.py) | Buttons, branded HTML, DMs |
+| **Routes** | [whatsapp](file:///Users/jaineel/projects/sales-customer-service/app/routes/webhooks/whatsapp.py), [email](file:///Users/jaineel/projects/sales-customer-service/app/routes/webhooks/email.py), [instagram](file:///Users/jaineel/projects/sales-customer-service/app/routes/webhooks/instagram.py), [shopify](file:///Users/jaineel/projects/sales-customer-service/app/routes/webhooks/shopify.py) | HMAC verification, async |
+| **Dashboard** | [admin](file:///Users/jaineel/projects/sales-customer-service/app/routes/admin.py), [simulator](file:///Users/jaineel/projects/sales-customer-service/app/routes/simulator.py) | WebSocket live, debug panel |
+| **Business Logic** | [sales_engine](file:///Users/jaineel/projects/sales-customer-service/app/services/sales_engine.py), [cs_engine](file:///Users/jaineel/projects/sales-customer-service/app/services/customer_service_engine.py), [escalation](file:///Users/jaineel/projects/sales-customer-service/app/services/escalation_service.py) | BANT scoring, 7 triggers |
+| **Onboarding** | [setup_wizard](file:///Users/jaineel/projects/sales-customer-service/scripts/setup_wizard.py) | CLI with custom business rules |
+| **Deploy** | [Dockerfile](file:///Users/jaineel/projects/sales-customer-service/Dockerfile), [railway.toml](file:///Users/jaineel/projects/sales-customer-service/railway.toml), [README](file:///Users/jaineel/projects/sales-customer-service/README.md) | Railway + custom domain |
+
+## Next Steps
+
+1. `pip install -e ".[dev]"` — install dependencies
+2. Set up Postgres + Redis locally (`brew install postgresql@16 redis`)  
+3. Run `python scripts/setup_wizard.py` to configure your client
+4. `uvicorn app.main:app --reload` — test via simulator at `/simulator`
