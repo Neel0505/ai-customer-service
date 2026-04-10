@@ -6,17 +6,17 @@ A production-ready AI agent that handles customer support and sales autonomously
 
 ## What it does
 
-This project connects an LLM-powered agent to your Shopify store and lets it handle real customer conversations — order lookups, product questions, returns, and lead qualification — across WhatsApp, Email, and Instagram, without human intervention unless escalation is needed.
+This project connects an LLM-powered agent to your Shopify store and lets it handle real customer conversations â€” order lookups, product questions, returns, and lead qualification â€” across WhatsApp, Email, and Instagram, without human intervention unless escalation is needed.
 
 ## Core Features
 
 - **GPT-4o Agent** with tool-calling to perform live Shopify operations
-- **Multi-channel support** — WhatsApp (buttons/lists), Email (HTML), Instagram DMs
-- **RAG pipeline** — pgvector semantic search over your product catalog so the agent always has accurate product context
-- **BANT lead scoring** — automatically qualifies inbound leads and routes hot ones
-- **Escalation engine** — 7 trigger types including sentiment analysis, VIP detection, legal flags, and retry limits
-- **Admin dashboard** — live WebSocket feed with full conversation debug view
-- **Chat simulator** — test the agent in your browser without needing real API credentials
+- **Multi-channel support** â€” WhatsApp (buttons/lists), Email (HTML), Instagram DMs
+- **RAG pipeline** â€” pgvector semantic search over your product catalog so the agent always has accurate product context
+- **BANT lead scoring** â€” automatically qualifies inbound leads and routes hot ones
+- **Escalation engine** â€” 7 trigger types including sentiment analysis, VIP detection, legal flags, and retry limits
+- **Admin dashboard** â€” live WebSocket feed with full conversation debug view
+- **Chat simulator** â€” test the agent in your browser without needing real API credentials
 
 ## Tech Stack
 
@@ -71,7 +71,7 @@ python3 scripts/dev.py
 3. Add **PostgreSQL** and **Redis** plugins
 4. Link your GitHub repo
 5. Set all variables from `.env.example` in the Railway dashboard
-6. Point a custom domain via Settings → Networking
+6. Point a custom domain via Settings â†’ Networking
 
 ### Webhook URLs
 
@@ -82,20 +82,7 @@ python3 scripts/dev.py
 | Instagram (Meta) | `https://api.yourdomain.com/webhooks/instagram` |
 | Shopify | `https://api.yourdomain.com/webhooks/shopify` |
 
-## Architecture
-FastAPI Monolith
-├── Webhook receivers      (Twilio, SendGrid, Meta, Shopify)
-├── Orchestrator           (12-step processing pipeline)
-├── LLM Service            (GPT-4o + Shopify tool definitions)
-├── RAG Service            (pgvector similarity search)
-├── Channel Adapters       (per-platform message formatting)
-├── Sales Engine           (BANT scoring logic)
-├── Escalation Service     (trigger detection + email alerts)
-└── Admin Dashboard        (WebSocket live updates)
 
-## License
-
-MIT — feel free to use, modify, and build on this.
 ```
 FastAPI Monolith
 +-- Webhook receivers      (Twilio, SendGrid, Meta, Shopify)
@@ -110,4 +97,4 @@ FastAPI Monolith
 
 ## License
 
-MIT � feel free to use, modify, and build on this.
+MIT — feel free to use, modify, and build on this.
