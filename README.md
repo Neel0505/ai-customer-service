@@ -1,4 +1,3 @@
-Set-Content -Path README.md -Value @'
 # AI Customer Service Agent
 
 A production-ready AI agent that handles customer support and sales autonomously across multiple messaging platforms, built on top of Shopify's ecosystem.
@@ -36,7 +35,6 @@ This project connects an LLM-powered agent to your Shopify store and lets it han
 ### Prerequisites
 
 ```bash
-# PostgreSQL with pgvector + Redis
 brew install postgresql@16 pgvector redis
 brew services start postgresql@16
 brew services start redis
@@ -53,10 +51,7 @@ source .venv/bin/activate
 
 pip install -e ".[dev]"
 
-# Interactive setup — configures .env, runs migrations, ingests Shopify products
 python scripts/setup_wizard.py
-
-# Starts uvicorn + ngrok tunnel
 python3 scripts/dev.py
 ```
 
@@ -76,9 +71,9 @@ python3 scripts/dev.py
 3. Add **PostgreSQL** and **Redis** plugins
 4. Link your GitHub repo
 5. Set all variables from `.env.example` in the Railway dashboard
-6. Point a custom domain (e.g. `api.yourdomain.com`) via Settings → Networking
+6. Point a custom domain via Settings → Networking
 
-### Webhook URLs to register
+### Webhook URLs
 
 | Platform | Webhook URL |
 |---|---|
@@ -87,18 +82,4 @@ python3 scripts/dev.py
 | Instagram (Meta) | `https://api.yourdomain.com/webhooks/instagram` |
 | Shopify | `https://api.yourdomain.com/webhooks/shopify` |
 
-## Architecture Overview
-FastAPI Monolith
-├── Webhook receivers      (Twilio, SendGrid, Meta, Shopify)
-├── Orchestrator           (12-step processing pipeline)
-├── LLM Service            (GPT-4o + Shopify tool definitions)
-├── RAG Service            (pgvector similarity search)
-├── Channel Adapters       (per-platform message formatting)
-├── Sales Engine           (BANT scoring logic)
-├── Escalation Service     (trigger detection + email alerts)
-└── Admin Dashboard        (WebSocket live updates)
-
-## License
-
-MIT — feel free to use, modify, and build on this.
-'@
+## Architecture
