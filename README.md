@@ -83,3 +83,16 @@ python3 scripts/dev.py
 | Shopify | `https://api.yourdomain.com/webhooks/shopify` |
 
 ## Architecture
+FastAPI Monolith
+├── Webhook receivers      (Twilio, SendGrid, Meta, Shopify)
+├── Orchestrator           (12-step processing pipeline)
+├── LLM Service            (GPT-4o + Shopify tool definitions)
+├── RAG Service            (pgvector similarity search)
+├── Channel Adapters       (per-platform message formatting)
+├── Sales Engine           (BANT scoring logic)
+├── Escalation Service     (trigger detection + email alerts)
+└── Admin Dashboard        (WebSocket live updates)
+
+## License
+
+MIT — feel free to use, modify, and build on this.
